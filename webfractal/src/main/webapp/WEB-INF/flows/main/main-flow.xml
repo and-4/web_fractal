@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+        <var name="user" class="com.example.webf.domain.UserEntity"/>
+        <var name="fractal" class="com.example.webf.fractal.FractalEntity"/>
+        
+        <view-state id="welcome" view="welcome.xhtml">
+                <transition on="newUser" to="signUp" ></transition>
+                <transition on="freeLook" to="free" ></transition>             
+                <transition on="confirmSignIn" to="finish">
+                        <evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)" />
+                </transition>
+                <transition on="toTheory" to="theory" ></transition>
+        </view-state>        
+        
+        <view-state id="signUp" view="signUp.xhtml" model="user">
+                <transition on="backToSignIn" to="welcome" />
+                <transition on="confirmSignUp" to="authentication">
+                        <evaluate expression="userService.createUser(user)" />
+                </transition>
+        </view-state>      
+        
+        <action-state id="authentication">
+                <evaluate expression="userAuthenticationProviderService.processUserAuthentication(user)" />
+                <transition on="yes" to="finish" />
+                <transition on="no" to="welcome" />
+        </action-state>
+        
+        <view-state id="free" view="freeView.xhtml">
+			<transition on="confirmNewFractal" to="freeViewFractal">
+				<set name="flowScope.fractalPath" value="fractalController.createFractalWithoutDAO(fractal)" />
+				<set name="flowScope.fractalSignature" value="fractalController.getFractalSignature(fractal)" />
+			</transition>
+		</view-state>        
+        
+        <view-state id="freeViewFractal" view="freeViewFractal.xhtml">			
+		</view-state>
+		
+		<view-state id="theory" view="theory.xhtml">			
+		</view-state>
+        
+        <end-state id="finish" view="externalRedirect:account" /> 
+        
+</flow>

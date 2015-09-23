@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+        
+        <secured attributes="ROLE_USER"/>
+        
+        <var name="fractal" class="com.example.webf.fractal.FractalEntity"/>
+        
+        <on-start>
+                <evaluate expression="userService.loadUserEntityByUsername(currentUser.name)" result="flowScope.user"/>
+        </on-start>
+        
+        <decision-state id="quest"> 
+        	<on-entry>        	
+                <evaluate expression="fractalService.getLinksAndSignaturesToPreviewImagesByUserID(user.id)" result="flowScope.allFractalLinks"/>  
+        		<set value="fractalService.getFIDFromCurrentFileNameAndUserID()"  name="flowScope.fractalFID"  />
+        	</on-entry>
+			 <if test="fractalController.whatNextView()" then="showUserFractal" else = "accountHome" /> 
+		</decision-state>
+
+        <view-state id="accountHome" view="accountHome.xhtml">
+        	<transition on="confirmNewFractal" to="newFractal">	
+        		<set name="flowScope.fractalPath" value="fractalService.createFractal(fractal)" />
+				<set name="flowScope.fractalSignature" value="fractalController.getFractalSignature(fractal)" />
+				<set name="flowScope.isFractalInDB" value="fractalService.isFractalInDB()" />
+			</transition>
+        </view-state>
+        
+        <view-state id="newFractal" view="newFractal.xhtml"	model="fractal">
+			<transition on="deleteFractal" to="accountHome">
+				<!-- <set name="flowScope.deleteResult" value="fractalService.deleteFractal(fractal)" /> -->
+				<evaluate expression="fractalService.deleteFractal(fractal)" />	        
+			</transition>
+		</view-state>
+		       
+        <view-state id="showUserFractal" view="showUserFractal.xhtml">
+	        <on-entry>
+	        	<evaluate expression="fractalController.generateImgAndGetFullImgName()" result="flowScope.fullImageName" />
+				<evaluate expression="fractalController.getSignatureFromParameter()" result="flowScope.showFractalSignature"/>
+	        </on-entry>
+	        
+	        <transition on="deleteOldFractal" to="quest">
+				<evaluate expression="fractalService.deleteFractalByCurrentXYUserID()" />	        
+			</transition>
+        </view-state>
+		
+</flow>

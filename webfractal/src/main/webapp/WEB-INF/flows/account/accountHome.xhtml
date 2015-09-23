@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/firstTemplate.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="Личная страница" />
+	</ui:define>
+	<ui:define name="header">
+		<h:outputText value="Личная страница" />
+	</ui:define>
+
+	<ui:define name="content">
+		<br />
+		<div id="common-menu">
+		</div>
+
+		<h:form id="accountHomeForm">
+			<p:fieldset styleClass="fieldset">
+				<p:messages id="messages" />
+
+				<h:panelGrid id="accountHomePanelGrid"
+					style="margin: 0 auto; margin-top: 25px; text-align: right"
+					cellspacing="8" columns="3">
+
+
+					<h:panelGroup>
+						<h:outputText value="x:" />
+					</h:panelGroup>
+					<p:inputText id="c_xid" value="#{fractal.c_x}" required="true"
+						label="c_x" title="Введите x (от -200 до 200)">
+						<f:validateRegex
+							pattern="(-?\b(200|1[0-9]{2}|[0-9]{0,2}|(?!-)0+))\b" />
+					</p:inputText>
+					<p:tooltip for="c_xid" styleClass="tooltip" showEvent="focus"
+						hideEvent="blur" />
+
+					<h:panelGroup>
+						<h:outputText value="y:" />
+					</h:panelGroup>
+
+					<p:inputText id="c_yid" value="#{fractal.c_y}" required="true"
+						label="c_y" title="Введите y (от -200 до 200)">
+						<f:validateRegex
+							pattern="(-?\b(200|1[0-9]{2}|[0-9]{0,2}|(?!-)0+))\b" />
+					</p:inputText>
+					<p:tooltip for="c_yid" styleClass="tooltip" showEvent="focus"
+						hideEvent="blur" />
+					<h:outputText value="" />
+
+					<h:panelGroup>
+					<br/>
+						<p:commandButton id="submitButton" action="confirmNewFractal"
+							update="accountHomeForm,messages" value="Создать фрактал"
+							style="margin-right: 20px;" />
+					</h:panelGroup>
+					<br />
+					
+					
+				</h:panelGrid>
+			</p:fieldset>
+			
+			<br />
+			<h:panelGrid id="accountHomePanelGrid2" style="margin-left: auto; margin-right: auto; text-align: center" >
+					<h:panelGroup rendered="#{!empty allFractalLinks}">
+						<h4><h:outputText value="Ваши фракталы" /></h4>
+					</h:panelGroup>
+					
+					<h:panelGroup rendered="#{empty allFractalLinks}">
+						<h4>
+						<h:outputText value="У Вас пока нет фракталов" /></h4>
+					</h:panelGroup>
+			</h:panelGrid>
+		
+			 <table  style="margin-left: auto; margin-right: auto; border-spacing: 50px; text-align: center" > 
+				<ui:repeat value="#{allFractalLinks}" var="firstLevel" >
+					<tr> 
+						<ui:repeat value="#{firstLevel}" var="secondLevel">
+						  <td>
+						  <a href="${request.contextPath}/app/account?showMeFractal=#{secondLevel[0]}">
+							<img border="0"	src="/webfractal/fractal_img/#{secondLevel[0]}"/></a>
+						 <br></br><br></br>#{secondLevel[1]}</td>
+						</ui:repeat> 
+					</tr>
+				</ui:repeat>
+			</table> 
+		</h:form>
+	</ui:define>
+	<ui:define name="footer">
+	</ui:define>
+</ui:composition>

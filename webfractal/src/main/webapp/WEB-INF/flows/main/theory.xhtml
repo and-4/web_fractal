@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/firstTemplate.xhtml">
+                
+        <ui:define name="title"><h:outputText value="Теория создания фракталов" /></ui:define>
+        <ui:define name="header"><h:outputText value="Теория создания фракталов" /></ui:define>           
+
+        <ui:define name="content">
+        <br/>
+        <div id="common-menu"> <a href="${request.contextPath}/app/main" >На главную</a></div>
+                		
+                		<h:form id="freeForm">
+                        <p:fieldset styleClass="fieldset">
+                                <p:messages id="messages" />
+                        
+                                <h:panelGrid id="regPanelGrid" style="margin: 0 auto; margin-top: 25px; margin-bottom: 25px; text-align: left" cellspacing="8" width="800">
+                                                                                                                                         
+                                        	<h:panelGroup style="font-size: 14px">
+                                                <h:outputText value="&#160;&#160;&#160;&#160;&#160;&#160;В основе построения данных фракталов лежит нелинейная функция комплексного итерационного процесса с обратной связью z=> z&#178;+c. Поскольку z и с -комплексные числа, то z=x+iy и c=p+iq необходимо разложить его на х и у чтобы перейти в более наглядную плоскость:" /><br/>
+                                            </h:panelGroup>
+                                            <h:panelGroup style="margin-top: 0px; margin-bottom: 0px;">
+                                                 <h:outputText  value="x(k+1)=x(k)&#178;-y(k)&#178; + p"/><br/>
+                                                 <h:outputText value="y(k+1)=2*x(k)*y(k) + q."/> <br/>
+                                            </h:panelGroup>
+                                            <h:panelGroup style="font-size: 14px">
+                                               	 <h:outputText value=", где k означает номер итариции." /><br/>
+                                                 <h:outputText value="&#160;&#160;&#160;&#160;&#160;&#160;Плоскость, состоящая из всех пар (x,y), рассматривается при фиксированных значениях р и q (вводимые пользователем x и y). Перебирая все точки (х,у) плоскости и окрашивая их в зависимости от количества повторений функции необходимых для выхода из итерационного процесса или окрашивая в темно-зеленый цвет при привышении допустимого максимума повторений мы получим отображение множества Жюлиа."/><br/>
+                                                 <h:outputText value="&#160;&#160;&#160;&#160;&#160;&#160;Точки окрашены желтым цветом в том случае, если они дошли до конца итераций без превышения порогового значения. Если точка превысила порог в конце серии итераций - она окрашивается в светло-зеленый оттенок. Если точка превысила порог в начале серии - она окрашивается в более темный оттенок. Количество итераций - 100 шт."/>
+                                        	</h:panelGroup>
+                                     
+                                        
+                                </h:panelGrid>
+                        </p:fieldset>
+                        
+                </h:form>   
+                
+        </ui:define>
+        <ui:define name="footer">
+        </ui:define>
+</ui:composition>
